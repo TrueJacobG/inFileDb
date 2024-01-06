@@ -19,6 +19,13 @@ export class InFileDB {
     this.tablePaths.push(tablePath);
   }
 
+  readTableAsObject(tableName: string) {
+    const file = fs.readFileSync(`${this.dbName}/${tableName}/${tableName}.json`);
+    const data = JSON.parse(file.toString());
+
+    return data;
+  }
+
   prepareFolder(folderName: string) {
     if (!fs.existsSync(folderName)) {
       fs.mkdir(folderName, (e) => {
