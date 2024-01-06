@@ -1,0 +1,21 @@
+{
+  "name": "infiledb",
+  "version": "1.0.0",
+  "description": "Create Simple Database on Local Storage",
+  "main": "index.js",
+  "scripts": {
+    "start": "clear && npx tsc && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "db",
+    "javascript",
+    "typescript"
+  ],
+  "author": "TrueJacobG",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  }
+}
