@@ -1,6 +1,7 @@
 import fs from "fs";
 import { TableMetaData } from "./types/TableMetaData";
 import { isJson } from "./utils/isJson";
+import { validateMetaData } from "./validators/validateMetaData";
 
 export class InFileDB {
   dbName: string;
@@ -13,47 +14,17 @@ export class InFileDB {
   }
 
   createTable(tableName: string, metaData: TableMetaData[]) {
-    let fixedMetaData = this.validateMetaData(metaData);
+    let fixedMetaData = validateMetaData(metaData);
 
     const tablePath = this.dbName + "/" + tableName;
     this.prepareFolder(tablePath);
     this.prepareFile(tablePath, tableName);
     this.prepareFile(tablePath, "metaData");
 
+    this.writeFile(tablePath, tableName, []);
     this.writeFile(tablePath, "metaData", fixedMetaData);
 
     this.tablePaths.push(tablePath);
-  }
-
-  validateMetaData(metaData: TableMetaData[]) {
-    metaData.map((col) => {
-      if (!("name" in col) || !("type" in col)) {
-        throw new Error("Error: Column must have a name and type!");
-      }
-
-      if (!("default" in col) && (!("required" in col) || col.required === false)) {
-        throw new Error(`Error: Column must have a default value or be required -> Column Name: ${col.name}!`);
-      }
-
-      if (!("required" in col)) {
-        col.required = false;
-      }
-
-      if (!("default" in col) && col.required === false) {
-        col.default = null;
-      }
-
-      if (!("min" in col) && col.type === "string") {
-        col.min = 0;
-      }
-      if (!("max" in col) && col.type === "string") {
-        col.max = 100;
-      }
-
-      return col;
-    });
-
-    return metaData;
   }
 
   readTableAsObject(tableName: string) {
@@ -87,7 +58,7 @@ export class InFileDB {
     }
   }
 
-  writeFile(path: string, fileName: string, data: object[]) {
+  writeFile(path: string, fileName: string, data: object[] | object) {
     fs.writeFile(path + "/" + fileName + ".json", JSON.stringify(data), function (e) {
       if (e) {
         console.error(e);

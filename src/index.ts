@@ -9,11 +9,9 @@ db.createTable("table1", [
   { name: "agentName", type: "string", default: "John" },
 ]);
 
-
-
-let outPut = db.readTableAsObject("table1");
-
-console.log(outPut);
+// error for now: ?
+// let outPut = db.readTableAsObject("table1");
+// console.log(outPut);
 
 // db.deleteDatabase();
 
